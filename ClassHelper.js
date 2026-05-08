@@ -50,6 +50,7 @@ class Box {
         const count = await children.count();
         
         let isFirstCoord = false;
+        let highestNum = 0;
         
         for (let i = 0; i < count; i++) {
             const spanChild = children.nth(i);
@@ -89,7 +90,8 @@ class Grid {
         this.div = div;
     
         this.gridArr = null;
-        this.firstBox = [];
+        this.firstBox = null;
+        this.highestNum = 0;
     }
 
     static gridArrHelper(dimension) {
@@ -128,6 +130,7 @@ class Grid {
         newClass.setGridArr(Grid.gridArrHelper(rowAndCol));
         const gridArr = newClass.getGridArr();
 
+        let highestNum = 0;
         // iterate through the child divs and find the boxes for the grid
         // i = row, j = columns
         for (let i = 0; i < rowAndCol; i++) {
@@ -139,16 +142,17 @@ class Grid {
                 const isFirstCoord = await newChildBox.childCheck();
                 
                 if (isFirstCoord) {
-                    // store as [ x, y ] 
-                    newClass.firstBox[0] = j;
-                    newClass.firstBox[1] = i;
+                    newClass.firstBox = newChildBox;
                 }
 
                 // console.log(newChildBox.toString());
                 gridArr[i][j] = newChildBox;
+                if (newChildBox.number > highestNum) {
+                    highestNum = newChildBox.number;
+                }
             }
         }
-
+        newClass.highestNum = highestNum;
         newClass.setDimensions(rowAndCol, rowAndCol);
         return newClass;
     }
